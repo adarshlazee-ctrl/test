@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vault Demo – Login &amp; Admin</title>
+  <meta name="description" content="A modern login, sign-up and admin dashboard demo built with plain HTML, CSS and JavaScript. Passwords are hashed in the browser.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Cpath d='M16 7l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10v-5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <main class="shell">
+    <header class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div>
+        <h1>Vault Demo</h1>
+        <p class="sub">Sign up, log in and manage users</p>
+      </div>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </header>
+
+    <div id="crypto-warning" class="banner error" hidden>
+      This browser can't run secure hashing here. Open the site over <strong>https</strong> (for example GitHub Pages) or <strong>localhost</strong>.
+    </div>
+
+    <section class="card">
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab active" role="tab" data-tab="signup" aria-selected="true">Sign up</button>
+        <button class="tab" role="tab" data-tab="login" aria-selected="false">Login</button>
+        <button class="tab" role="tab" data-tab="admin" aria-selected="false">Admin</button>
+      </nav>
+
+      <!-- SIGN UP -->
+      <div class="panel" data-panel="signup" role="tabpanel">
+        <form id="signup-form" novalidate autocomplete="off">
+          <label class="lbl" for="su-user">Username</label>
+          <div class="field">
+            <input id="su-user" name="username" type="text" placeholder="e.g. sam_01" autocomplete="off" required>
+          </div>
+
+          <label class="lbl" for="su-pass">Password</label>
+          <div class="field">
+            <input id="su-pass" name="password" type="password" placeholder="At least 8 characters" data-meter autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+          <div class="meter" data-level="0"><i></i><i></i><i></i><i></i><span>Strength</span></div>
+
+          <label class="lbl" for="su-confirm">Confirm password</label>
+          <div class="field">
+            <input id="su-confirm" name="confirm" type="password" placeholder="Repeat password" autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+
+          <button class="btn primary" type="submit">Create account</button>
+          <p class="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="panel" data-panel="login" role="tabpanel" hidden>
+        <form id="login-form" novalidate autocomplete="off">
+          <label class="lbl" for="li-user">Username</label>
+          <div class="field">
+            <input id="li-user" name="username" type="text" autocomplete="username" required>
+          </div>
+
+          <label class="lbl" for="li-pass">Password</label>
+          <div class="field">
+            <input id="li-pass" name="password" type="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+
+          <button class="btn primary" type="submit">Log in</button>
+          <p class="status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div id="account" class="account" hidden>
+          <div class="avatar" id="acc-avatar">?</div>
+          <h2 id="acc-name">Welcome</h2>
+          <p class="muted" id="acc-meta"></p>
+          <div class="row center">
+            <button id="acc-logout" class="btn" type="button">Log out</button>
+            <button id="acc-delete" class="btn danger-ghost" type="button">Delete my account</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="panel" data-panel="admin" role="tabpanel" hidden>
+
+        <!-- first-time setup -->
+        <form id="admin-setup" novalidate autocomplete="off" hidden>
+          <div class="banner info">No admin yet. Create the admin account for this browser.</div>
+          <label class="lbl" for="as-user">Admin username</label>
+          <div class="field"><input id="as-user" name="username" type="text" autocomplete="off" required></div>
+
+          <label class="lbl" for="as-pass">Admin password</label>
+          <div class="field">
+            <input id="as-pass" name="password" type="password" data-meter autocomplete="new-password" placeholder="At least 8 characters" required>
+            <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+          <div class="meter" data-level="0"><i></i><i></i><i></i><i></i><span>Strength</span></div>
+
+          <label class="lbl" for="as-confirm">Confirm password</label>
+          <div class="field">
+            <input id="as-confirm" name="confirm" type="password" autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+
+          <button class="btn primary" type="submit">Create admin</button>
+          <p class="status" role="status" aria-live="polite"></p>
+        </form>
+
+        <!-- admin login -->
+        <form id="admin-login" novalidate autocomplete="off" hidden>
+          <label class="lbl" for="al-user">Admin username</label>
+          <div class="field"><input id="al-user" name="username" type="text" autocomplete="username" required></div>
+
+          <label class="lbl" for="al-pass">Admin password</label>
+          <div class="field">
+            <input id="al-pass" name="password" type="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+
+          <button class="btn primary" type="submit">Open dashboard</button>
+          <p class="status" role="status" aria-live="polite"></p>
+        </form>
+
+        <!-- dashboard -->
+        <div id="admin-dash" hidden>
+          <div class="dash-head">
+            <h2>Users</h2>
+            <button id="admin-logout" class="btn small" type="button">Log out</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><b id="stat-total">0</b><span>Total users</span></div>
+            <div class="stat"><b id="stat-recent">0</b><span>Joined last 7 days</span></div>
+            <div class="stat"><b id="stat-active">0</b><span>Have logged in</span></div>
+          </div>
+
+          <div class="toolbar">
+            <input id="search" type="search" placeholder="Search username…" aria-label="Search users">
+            <button id="export" class="btn small" type="button">Export</button>
+            <button id="clear" class="btn small danger-ghost" type="button">Delete all</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Username</th><th>Joined</th><th>Last login</th><th class="right">Actions</th></tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <p id="empty" class="muted center-text" hidden>No users found.</p>
+        </div>
+      </div>
+    </section>
+
+    <p class="footnote">
+      Demo only. Everything is saved in this browser (localStorage) and passwords are stored as salted PBKDF2 hashes, never as plain text.
+    </p>
+  </main>
+
+  <dialog id="dialog">
+    <form method="dialog">
+      <h3 id="dlg-title"></h3>
+      <p id="dlg-text" class="muted"></p>
+      <div class="field" id="dlg-field" hidden>
+        <input id="dlg-input" type="password" autocomplete="new-password">
+      </div>
+      <div class="row end">
+        <button class="btn" value="cancel" formnovalidate>Cancel</button>
+        <button class="btn primary" id="dlg-ok" value="ok">Confirm</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
